@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ZaidSmart · Ideas inteligentes. Soluciones reales.</title>
+<meta name="description" content="ZaidSmart es un estudio independiente que crea apps y webs útiles para el día a día.">
+<meta name="theme-color" content="#080b16">
+<meta property="og:title" content="ZaidSmart">
+<meta property="og:description" content="Ideas inteligentes. Soluciones reales.">
+<link rel="icon" href="logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Semi+Condensed:wght@600;700&family=Doto:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --noche: #080b16;
+    --asfalto: #10172c;
+    --linea: #222e55;
+    --menta: #22e3a0;
+    --violeta: #8a3ffc;
+    --lila: #b48cff;
+    --sodio: #ffb547;
+    --texto: #e8edff;
+    --gris: #9aa6cf;
+    --carcasa: #05070d;
+    --display: "Barlow Semi Condensed", "Barlow", system-ui, sans-serif;
+    --body: "Barlow", system-ui, sans-serif;
+    --led: "Doto", ui-monospace, monospace;
+    --gutter: clamp(20px, 5vw, 56px);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  html, body { overflow-x: clip; }
+  body { background: var(--noche); color: var(--texto); font: 400 18px/1.6 var(--body); -webkit-font-smoothing: antialiased; }
+  img, svg, canvas { display: block; }
+  a { color: inherit; }
+  :focus-visible { outline: 3px solid var(--menta); outline-offset: 3px; border-radius: 6px; }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .wrap { width: min(1120px, 100% - 2 * var(--gutter)); margin-inline: auto; }
+  section, .ficha { scroll-margin-top: 84px; }
+
+  /* ---------- navegación ---------- */
+  .nav {
+    position: fixed; inset: 0 0 auto 0; z-index: 30;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px var(--gutter);
+    border-bottom: 1px solid transparent;
+    transition: background .3s, border-color .3s;
+  }
+  .nav.solid { background: rgba(8, 11, 22, .86); backdrop-filter: blur(10px); border-color: var(--linea); }
+  .brand { display: flex; align-items: center; gap: 10px; font: 700 22px/1 var(--display); text-decoration: none; }
+  .brand img { width: 34px; height: 34px; border-radius: 9px; }
+  .nav-links { display: flex; align-items: center; gap: 28px; list-style: none; }
+  .nav-links a { font-weight: 500; font-size: 16px; color: var(--gris); text-decoration: none; transition: color .2s; }
+  .nav-links a:hover { color: var(--texto); }
+  .nav-links .nav-cta { color: var(--noche); background: var(--menta); padding: 8px 18px; border-radius: 999px; font-weight: 600; }
+  .nav-links .nav-cta:hover { color: var(--noche); background: #5cf0bf; }
+
+  /* ---------- portada ---------- */
+  .hero {
+    position: relative; isolation: isolate; overflow: hidden;
+    min-height: max(100svh, 760px);
+    display: flex; flex-direction: column; align-items: center; text-align: center;
+    padding: clamp(104px, 15vh, 160px) var(--gutter) 0;
+  }
+  #city { position: absolute; top: 0; left: 0; z-index: -2; image-rendering: pixelated; }
+  .hero::after {
+    content: ""; position: absolute; z-index: -1; inset: 0; pointer-events: none;
+    background: radial-gradient(ellipse 60% 48% at 50% 34%, rgba(8, 11, 22, .72), transparent 72%);
+  }
+  .sign {
+    position: relative; width: min(860px, 100%);
+    padding: clamp(12px, 2vw, 20px);
+    background: var(--carcasa); border-radius: 18px;
+    box-shadow: 0 0 0 1px #1b2547, 0 0 0 7px #0b1020, 0 0 0 8px #1b2547, 0 40px 90px rgba(0, 0, 0, .6), 0 0 80px rgba(138, 63, 252, .14);
+  }
+  .sign::before, .sign::after {
+    content: ""; position: absolute; bottom: calc(100% + 8px); width: 3px; height: 60vh;
+    background: linear-gradient(to top, #2a3560, rgba(42, 53, 96, 0));
+  }
+  .sign::before { left: 16%; }
+  .sign::after { right: 16%; }
+  .led { width: 100%; height: auto; }
+  .led-rule { height: 1px; background: #121a33; margin: clamp(8px, 1.4vw, 14px) 0; }
+  .intro { max-width: 36ch; margin-top: clamp(28px, 4vh, 40px); font-size: clamp(19px, 2vw, 22px); line-height: 1.5; }
+  .actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; margin-top: 26px; }
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+    padding: 14px 26px; border-radius: 999px;
+    font: 600 17px/1 var(--body); text-decoration: none;
+    transition: transform .15s, background .15s, box-shadow .15s;
+  }
+  .btn:hover { transform: translateY(-2px); }
+  .btn-primary { background: var(--menta); color: #03140d; }
+  .btn-primary:hover { background: #5cf0bf; }
+  .btn-ghost { background: rgba(16, 23, 44, .75); color: var(--texto); box-shadow: inset 0 0 0 1.5px var(--linea); backdrop-filter: blur(6px); }
+  .btn-ghost:hover { box-shadow: inset 0 0 0 1.5px var(--gris); }
+
+  /* ---------- secciones ---------- */
+  .section { padding: clamp(84px, 11vw, 136px) 0; }
+  h2 { font: 700 clamp(38px, 5vw, 56px)/1.05 var(--display); letter-spacing: -.3px; }
+  .lead { font-size: 21px; color: var(--gris); max-width: 46ch; margin-top: 14px; }
+
+  /* líneas (qué hacemos) */
+  .lines { list-style: none; display: grid; grid-template-columns: repeat(3, 1fr); margin-top: 52px; border-top: 2px solid var(--linea); }
+  .lines li { position: relative; padding: 30px 32px 0 0; display: grid; grid-template-columns: auto 1fr; gap: 16px; align-items: start; }
+  .lines li::before { content: ""; position: absolute; top: -2px; left: 0; width: 64px; height: 4px; border-radius: 2px; background: var(--c); }
+  .lines h3 { font: 600 24px/1.2 var(--display); margin: 6px 0; }
+  .lines p { color: var(--gris); font-size: 17px; }
+  .badge {
+    --c: var(--menta);
+    display: inline-grid; place-items: center; width: 44px; height: 44px; border-radius: 10px;
+    background: var(--c); color: #060814; font: 700 19px/1 var(--display);
+  }
+  .c-a { --c: var(--menta); }
+  .c-w { --c: var(--violeta); color: #fff; }
+  .c-ia { --c: var(--sodio); }
+
+  /* panel de salidas */
+  .board {
+    margin-top: 48px; background: var(--carcasa); border-radius: 16px;
+    box-shadow: 0 0 0 1px #1b2547, 0 0 0 7px #0b1020, 0 0 0 8px #1b2547, 0 30px 70px rgba(0, 0, 0, .5);
+    padding: 6px clamp(16px, 3vw, 30px) 10px;
+  }
+  .board-top { display: flex; justify-content: space-between; align-items: center; padding: 14px 0 12px; border-bottom: 1px solid #121a33; }
+  .board-top span { font: 900 20px/1 var(--led); color: var(--menta); text-shadow: 0 0 8px rgba(34, 227, 160, .5); }
+  .board-top .clock { color: var(--sodio); text-shadow: 0 0 8px rgba(255, 181, 71, .5); }
+  .clock .colon { animation: blink 1s steps(1) infinite; }
+  .row { display: grid; grid-template-columns: 64px minmax(0, 1.1fr) minmax(0, 1.3fr) auto; align-items: center; gap: 18px; padding: 18px 0; text-decoration: none; }
+  .board .row:not(.row-head) { border-top: 1px dashed #1a2342; }
+  .row-head { padding: 12px 0 8px; font-size: 14px; color: #5f6c99; }
+  .dest { font: 900 clamp(20px, 2.4vw, 28px)/1.1 var(--led); color: var(--sodio); text-shadow: 0 0 10px rgba(255, 181, 71, .55); letter-spacing: .02em; }
+  .det { color: var(--gris); font-size: 16px; }
+  .st { font: 700 clamp(14px, 1.5vw, 17px)/1.1 var(--led); text-align: right; white-space: nowrap; }
+  .st-ambar { color: var(--sodio); text-shadow: 0 0 8px rgba(255, 181, 71, .5); animation: blink 1.4s steps(1) infinite; }
+  .st-menta { color: var(--menta); text-shadow: 0 0 8px rgba(34, 227, 160, .5); }
+  .st-lila { color: var(--lila); text-shadow: 0 0 8px rgba(180, 140, 255, .45); }
+  a.row:hover .dest { color: #ffd08a; }
+  a.row:hover .det { color: var(--texto); }
+  @keyframes blink { 50% { opacity: .35; } }
+
+  /* fichas de proyecto */
+  .fichas { display: grid; gap: clamp(90px, 10vw, 130px); margin-top: clamp(80px, 10vw, 120px); }
+  .ficha { display: grid; grid-template-columns: 1.05fr 1fr; gap: clamp(40px, 6vw, 90px); align-items: center; }
+  .ficha.sin-visual { grid-template-columns: 1fr; max-width: 760px; }
+  .ficha-title { font: 700 clamp(36px, 4.4vw, 50px)/1.05 var(--display); letter-spacing: -.3px; }
+  .pill {
+    --pc: var(--menta);
+    display: inline-flex; align-items: center; gap: 8px; margin-bottom: 18px;
+    font-size: 15px; font-weight: 600; color: var(--pc);
+    padding: 6px 14px; border-radius: 999px;
+    background: color-mix(in srgb, var(--pc) 12%, transparent);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--pc) 45%, transparent);
+  }
+  .pill.ambar { --pc: var(--sodio); }
+  .pill.lila { --pc: var(--lila); }
+  .pill i { width: 8px; height: 8px; border-radius: 50%; background: currentColor; box-shadow: 0 0 0 0 currentColor; animation: ping 1.8s ease-out infinite; }
+  @keyframes ping { to { box-shadow: 0 0 0 10px transparent; } }
+  .features { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 26px 30px; margin-top: 36px; }
+  .features li { padding-left: 26px; position: relative; }
+  .features li::before { content: ""; position: absolute; left: 0; top: 6px; width: 12px; height: 12px; border-radius: 50%; background: var(--noche); box-shadow: 0 0 0 3px var(--menta); }
+  .features h4 { font: 600 20px/1.25 var(--display); }
+  .features p { color: var(--gris); font-size: 16px; margin-top: 4px; }
+  .stack { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; margin-top: 34px; }
+  .stack li { font-size: 14px; font-weight: 500; color: var(--gris); padding: 5px 12px; border-radius: 8px; background: var(--asfalto); box-shadow: inset 0 0 0 1px var(--linea); }
+
+  .phone-wrap { position: relative; display: grid; place-items: center; }
+  .phone-wrap::before { content: ""; position: absolute; width: 120%; aspect-ratio: 1; background: radial-gradient(circle, rgba(138, 63, 252, .22), transparent 62%); z-index: -1; }
+  .phone {
+    position: relative; width: 300px; height: 620px; border-radius: 46px;
+    background: #0d1430; overflow: hidden;
+    box-shadow: 0 0 0 10px var(--carcasa), 0 0 0 11px #2a3560, 0 40px 80px rgba(0, 0, 0, .6);
+    transform: rotate(-3deg);
+  }
+  .phone .map, .phone .captura { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .island { position: absolute; top: 12px; left: 50%; translate: -50%; width: 92px; height: 26px; border-radius: 20px; background: var(--carcasa); }
+  .status { position: absolute; top: 16px; left: 30px; right: 24px; display: flex; justify-content: space-between; align-items: center; font: 600 14px/1 var(--body); }
+  .search { position: absolute; top: 56px; left: 16px; right: 16px; display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-radius: 14px; background: rgba(16, 23, 44, .94); box-shadow: inset 0 0 0 1px var(--linea); color: var(--gris); font-size: 15px; }
+  .sheet { position: absolute; left: 0; right: 0; bottom: 0; padding: 14px 18px 20px; border-radius: 24px 24px 0 0; background: rgba(16, 23, 44, .97); box-shadow: 0 -1px 0 var(--linea); }
+  .sheet .grab { width: 40px; height: 4px; border-radius: 4px; background: #2a3560; margin: 0 auto 14px; }
+  .eta { display: flex; align-items: center; gap: 12px; }
+  .eta .badge { width: 40px; height: 40px; font-size: 19px; flex: none; }
+  .eta-text { flex: 1; min-width: 0; line-height: 1.25; }
+  .eta-text b { display: block; font: 600 18px/1.2 var(--display); }
+  .eta-text small { color: var(--gris); font-size: 13px; }
+  .eta-min { text-align: right; flex: none; }
+  .eta-min small { display: block; font-size: 12px; color: var(--gris); margin-bottom: 2px; }
+  .eta-min b { font: 900 26px/1 var(--led); color: var(--menta); text-shadow: 0 0 10px rgba(34, 227, 160, .5); }
+  .alert { margin-top: 14px; padding: 9px 12px; border-radius: 10px; background: rgba(255, 181, 71, .1); color: #ffd08a; font-size: 13px; line-height: 1.35; box-shadow: inset 0 0 0 1px rgba(255, 181, 71, .35); }
+  .buy { margin-top: 12px; width: 100%; padding: 12px; border-radius: 12px; background: var(--menta); color: #03140d; font: 600 15px var(--body); text-align: center; }
+
+  /* billete (contacto) */
+  .ticket-wrap { filter: drop-shadow(0 26px 40px rgba(0, 0, 0, .45)); }
+  .ticket {
+    --cut: 280px;
+    display: grid; grid-template-columns: 1fr var(--cut);
+    background: #eef2ff; color: #0b1230; border-radius: 18px;
+    -webkit-mask: radial-gradient(circle 15px at calc(100% - var(--cut)) 0, #0000 96%, #000), radial-gradient(circle 15px at calc(100% - var(--cut)) 100%, #0000 96%, #000);
+    -webkit-mask-composite: source-in;
+    mask: radial-gradient(circle 15px at calc(100% - var(--cut)) 0, #0000 96%, #000), radial-gradient(circle 15px at calc(100% - var(--cut)) 100%, #0000 96%, #000);
+    mask-composite: intersect;
+  }
+  .ticket-main { padding: 0 0 40px; }
+  .band { padding: 14px clamp(24px, 4vw, 44px); border-radius: 18px 0 0 0; background: linear-gradient(90deg, var(--menta), var(--violeta)); color: #fff; font: 600 16px/1 var(--display); letter-spacing: .3px; }
+  .ticket h2 { padding: 30px clamp(24px, 4vw, 44px) 0; color: #0b1230; }
+  .route { display: flex; align-items: center; gap: 18px; padding: 24px clamp(24px, 4vw, 44px) 0; }
+  .route span { display: block; font-size: 14px; color: #5a6690; }
+  .route strong { font: 700 clamp(22px, 2.6vw, 30px)/1.1 var(--display); }
+  .route-line { flex: 1; min-width: 40px; height: 3px; background: repeating-linear-gradient(90deg, #8a95c0 0 6px, transparent 6px 12px); position: relative; }
+  .route-line svg { position: absolute; left: 50%; top: 50%; translate: -50% -50%; }
+  .ticket-main p { padding: 20px clamp(24px, 4vw, 44px) 0; color: #4a557d; max-width: 46ch; }
+  .stub { display: flex; flex-direction: column; justify-content: center; gap: 14px; padding: 36px 30px; border-left: 3px dashed #c3cbec; }
+  .btn-dark { background: #0b1230; color: var(--menta); }
+  .btn-dark:hover { background: #18214a; }
+  .stub a.link { text-align: center; font-size: 15px; font-weight: 500; color: #4a557d; }
+  .barcode { height: 46px; margin-top: 8px; background: repeating-linear-gradient(90deg, #0b1230 0 2px, transparent 2px 4px, #0b1230 4px 7px, transparent 7px 9px, #0b1230 9px 10px, transparent 10px 14px); opacity: .85; border-radius: 2px; }
+  .stub small { text-align: center; color: #7a85ad; font-size: 13px; }
+
+  footer { border-top: 1px solid var(--linea); padding: 34px 0 44px; }
+  .foot { display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; color: var(--gris); font-size: 15px; }
+  .foot .brand { color: var(--texto); font-size: 19px; }
+  .foot .brand img { width: 28px; height: 28px; border-radius: 7px; }
+  .foot a { text-decoration-color: rgba(154, 166, 207, .4); text-underline-offset: 3px; }
+
+  @media (max-width: 900px) {
+    .lines { grid-template-columns: 1fr; border-top: 0; margin-top: 36px; }
+    .lines li { padding: 26px 0 24px; border-top: 2px solid var(--linea); }
+    .ficha { grid-template-columns: 1fr; }
+    .phone-wrap { margin-top: 20px; }
+    .ticket { grid-template-columns: 1fr; -webkit-mask: none; mask: none; }
+    .band { border-radius: 18px 18px 0 0; }
+    .stub { border-left: 0; border-top: 3px dashed #c3cbec; }
+  }
+  @media (max-width: 700px) {
+    .nav-links li:not(:last-child) { display: none; }
+    .row { grid-template-columns: 44px 1fr; gap: 4px 14px; }
+    .row > span:first-child { grid-row: span 2; }
+    .st { text-align: left; font-size: 14px; }
+    .det, .row-head .col-det, .row-head span:last-child { display: none; }
+    .features { grid-template-columns: 1fr; }
+    .phone { width: 270px; height: 560px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav" id="nav">
+  <a href="#top" class="brand"><img src="logo.png" alt="" width="34" height="34" onerror="if(!this.dataset.f){this.dataset.f=1;this.src='https://github.com/Zaid-Smart.png?size=80'}else{this.remove()}">ZaidSmart</a>
+  <ul class="nav-links">
+    <li><a href="#lineas">Qué hacemos</a></li>
+    <li><a href="#proyectos">Proyectos</a></li>
+    <li><a href="#contacto" class="nav-cta">Contacto</a></li>
+  </ul>
+</nav>
+
+<header class="hero" id="top">
+  <canvas id="city" aria-hidden="true"></canvas>
+  <h1 class="sr-only">ZaidSmart</h1>
+  <div class="sign" aria-hidden="true">
+    <div id="led-title"></div>
+    <div class="led-rule"></div>
+    <div id="led-marquee"></div>
+  </div>
+  <p class="sr-only">Ideas inteligentes. Soluciones reales.</p>
+  <p class="intro">Estudio independiente de apps y webs. Convertimos ideas en herramientas útiles para el día a día.</p>
+  <div class="actions">
+    <a href="#proyectos" class="btn btn-primary">Ver proyectos</a>
+    <a href="#contacto" class="btn btn-ghost">Escríbenos</a>
+  </div>
+</header>
+
+<main>
+  <section class="section" id="lineas">
+    <div class="wrap">
+      <h2>Qué hacemos</h2>
+      <p class="lead">Trabajamos en tres líneas. Cada proyecto viaja por una de ellas.</p>
+      <ul class="lines">
+        <li class="c-a"><span class="badge c-a">A</span><div><h3>Apps Android</h3><p>Apps nativas en Java y Kotlin, rápidas y fáciles de usar.</p></div></li>
+        <li class="c-w"><span class="badge c-w">W</span><div><h3>Webs</h3><p>Páginas y herramientas web que funcionan en cualquier dispositivo.</p></div></li>
+        <li class="c-ia"><span class="badge c-ia">IA</span><div><h3>Asistentes con IA</h3><p>Asistentes que automatizan tareas y te ahorran tiempo.</p></div></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" id="proyectos" style="padding-top:0">
+    <div class="wrap">
+      <h2>Proyectos</h2>
+      <p class="lead">Lo que ya circula y lo que está por llegar.</p>
+      <div class="board" role="table" aria-label="Proyectos de ZaidSmart">
+        <div class="board-top" aria-hidden="true"><span>PRÓXIMAS SALIDAS</span><span class="clock" id="clock"></span></div>
+        <div class="row row-head" role="row"><span role="columnheader">Línea</span><span role="columnheader">Proyecto</span><span role="columnheader" class="col-det">Qué es</span><span role="columnheader" style="text-align:right">Estado</span></div>
+        <div role="rowgroup" id="board-rows"></div>
+      </div>
+      <div class="fichas" id="fichas"></div>
+    </div>
+  </section>
+
+  <section class="section" id="contacto" style="padding-top:0">
+    <div class="wrap">
+      <div class="ticket-wrap">
+        <div class="ticket">
+          <div class="ticket-main">
+            <div class="band">Billete ZaidSmart</div>
+            <h2>¿Tienes una idea?</h2>
+            <div class="route">
+              <div><span>De</span><strong>Tu idea</strong></div>
+              <div class="route-line" aria-hidden="true">
+                <svg width="30" height="18" viewBox="0 0 15 9" shape-rendering="crispEdges"><rect x="0" y="0" width="15" height="7" rx="1" fill="#6a2fd6"/><rect x="2" y="1" width="2" height="2" fill="#cfe9ff"/><rect x="5" y="1" width="2" height="2" fill="#cfe9ff"/><rect x="8" y="1" width="2" height="2" fill="#cfe9ff"/><rect x="11" y="1" width="3" height="3" fill="#cfe9ff"/><rect x="0" y="5" width="15" height="1" fill="#22e3a0"/><rect x="2" y="7" width="3" height="2" fill="#0b1230"/><rect x="10" y="7" width="3" height="2" fill="#0b1230"/></svg>
+              </div>
+              <div><span>A</span><strong>Una app real</strong></div>
+            </div>
+            <p>Escríbenos, cuéntanos qué necesitas y te respondemos.</p>
+          </div>
+          <div class="stub">
+            <a class="btn btn-dark" href="mailto:alfonsodiaz003@gmail.com">Escríbenos</a>
+            <a class="link" href="https://github.com/Zaid-Smart" target="_blank" rel="noopener">Ver nuestro GitHub</a>
+            <div class="barcode" aria-hidden="true"></div>
+            <small>Válido para cualquier idea</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <a href="#top" class="brand"><img src="logo.png" alt="" width="28" height="28" onerror="if(!this.dataset.f){this.dataset.f=1;this.src='https://github.com/Zaid-Smart.png?size=64'}else{this.remove()}">ZaidSmart</a>
+    <p>© <span id="year"></span> ZaidSmart. Fundada por <a href="https://github.com/Diaz003" target="_blank" rel="noopener">Zaid</a>.</p>
+  </div>
+</footer>
+
+<script>
+/* =====================================================================
+   PROYECTOS
+   Para añadir un proyecto nuevo, copia un bloque { ... } y cambia sus datos.
+   El orden de esta lista es el orden en que salen en la web.
+
+   nombre   → nombre del proyecto
+   linea    → "A" (Apps Android), "W" (Webs) o "IA" (Asistentes con IA)
+   resumen  → frase corta para el panel de salidas
+   estado   → texto del panel: "EN DESARROLLO", "EN SERVICIO", "PRÓXIMAMENTE"…
+   color    → color del estado: "ambar", "menta" o "lila"
+   ficha    → (opcional) tarjeta grande con más información:
+      texto, funciones (lista de [título, descripción]), tecnologias,
+      imagen (captura del móvil, por ejemplo "capturas/mi-app.png")
+   ===================================================================== */
+const PROYECTOS = [
+  {
+    nombre: "ZaidMove",
+    linea: "A",
+    resumen: "Transporte público en tiempo real",
+    estado: "EN DESARROLLO",
+    color: "ambar",
+    ficha: {
+      texto: "Muévete por tu ciudad sin esperar a ciegas. Mira dónde está tu bus en tiempo real, compra el billete desde el móvil y avisa a los demás si hay retrasos.",
+      funciones: [
+        ["Mapa en directo", "Buses, trenes y taxis en el mapa, en tiempo real."],
+        ["Billetes en el móvil", "Compra y guarda tus billetes sin hacer cola."],
+        ["Avisos de la comunidad", "Retrasos e incidencias contados por quien está en la parada."],
+        ["Panel para conductores", "Los conductores comparten su posición con un toque."],
+      ],
+      tecnologias: ["Android", "Java", "Firebase", "Google Maps"],
+      demo: "zaidmove",
+    },
+  },
+  {
+    nombre: "Esta web",
+    linea: "W",
+    resumen: "La página que estás viendo",
+    estado: "EN SERVICIO",
+    color: "menta",
+  },
+  {
+    nombre: "Próximamente",
+    linea: "IA",
+    resumen: "Nuevas ideas en preparación",
+    estado: "EN PREPARACIÓN",
+    color: "lila",
+  },
+];
+
+(() => {
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const MENTA = "#22e3a0", VIOLETA = "#8a3ffc", SODIO = "#ffb547";
+  const hex = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
+  const mix = (a, b, t) => "#" + hex(a).map((v, i) => Math.round(v + (hex(b)[i] - v) * t).toString(16).padStart(2, "0")).join("");
+  const slug = s => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+  const frase = s => s.charAt(0) + s.slice(1).toLowerCase();
+  const LINEA = { A: "c-a", W: "c-w", IA: "c-ia" };
+
+  /* ===== panel de salidas y fichas, generados desde la lista ===== */
+  document.getElementById("board-rows").innerHTML = PROYECTOS.map(p => {
+    const tag = p.ficha ? `a href="#p-${slug(p.nombre)}"` : "div", end = p.ficha ? "a" : "div";
+    return `<${tag} class="row" role="row"><span role="cell"><span class="badge ${LINEA[p.linea] || "c-a"}">${p.linea}</span></span>` +
+      `<span role="cell" class="dest">${p.nombre.toUpperCase()}</span><span role="cell" class="det">${p.resumen}</span>` +
+      `<span role="cell" class="st st-${p.color || "menta"}">${p.estado}</span></${end}>`;
+  }).join("");
+
+  const movilZaidMove = () => `
+    <div class="phone-wrap" aria-hidden="true"><div class="phone">
+      <svg class="map" viewBox="0 0 300 620" id="map"></svg>
+      <div class="island"></div>
+      <div class="status"><span>9:41</span>
+        <svg width="44" height="12" viewBox="0 0 44 12"><rect x="0" y="8" width="3" height="4" rx="1" fill="#e8edff"/><rect x="5" y="5" width="3" height="7" rx="1" fill="#e8edff"/><rect x="10" y="2" width="3" height="10" rx="1" fill="#e8edff"/><rect x="20" y="1" width="19" height="10" rx="3" fill="none" stroke="#e8edff" stroke-width="1.5"/><rect x="22.5" y="3.5" width="12" height="5" rx="1.5" fill="#e8edff"/><rect x="40.5" y="4" width="2" height="4" rx="1" fill="#e8edff"/></svg>
+      </div>
+      <div class="search"><svg width="16" height="16" viewBox="0 0 16 16"><circle cx="7" cy="7" r="5" fill="none" stroke="#9aa6cf" stroke-width="2"/><path d="M11 11l4 4" stroke="#9aa6cf" stroke-width="2" stroke-linecap="round"/></svg>¿A dónde vas?</div>
+      <div class="sheet"><div class="grab"></div>
+        <div class="eta"><span class="badge c-a">3</span>
+          <div class="eta-text"><b>Hacia Centro</b><small>Parada Plaza Mayor</small></div>
+          <div class="eta-min"><small>Llega en</small><b>4 min</b></div>
+        </div>
+        <div class="alert">Retraso de 2 min avisado por la comunidad</div>
+        <div class="buy">Comprar billete</div>
+      </div>
+    </div></div>`;
+
+  document.getElementById("fichas").innerHTML = PROYECTOS.filter(p => p.ficha).map(p => {
+    const f = p.ficha;
+    const visual = f.demo === "zaidmove" ? movilZaidMove()
+      : f.imagen ? `<div class="phone-wrap" aria-hidden="true"><div class="phone"><img class="captura" src="${f.imagen}" alt=""></div></div>` : "";
+    return `<article class="ficha${visual ? "" : " sin-visual"}" id="p-${slug(p.nombre)}"><div>` +
+      `<span class="pill ${p.color || "menta"}"><i></i>${frase(p.estado)}</span>` +
+      `<h3 class="ficha-title">${p.nombre}</h3><p class="lead">${f.texto || ""}</p>` +
+      (f.funciones ? `<ul class="features">${f.funciones.map(([t, d]) => `<li><h4>${t}</h4><p>${d}</p></li>`).join("")}</ul>` : "") +
+      (f.tecnologias ? `<ul class="stack" aria-label="Tecnologías">${f.tecnologias.map(t => `<li>${t}</li>`).join("")}</ul>` : "") +
+      `</div>${visual}</article>`;
+  }).join("");
+
+  /* ===== fuente de matriz de puntos 5x7 ===== */
+  const F = {
+    A: "01110100011000111111100011000110001", B: "11110100011000111110100011000111110", C: "01110100011000010000100001000101110",
+    D: "11110100011000110001100011000111110", E: "11111100001000011110100001000011111", F: "11111100001000011110100001000010000",
+    G: "01110100011000010111100011000101111", H: "10001100011000111111100011000110001", I: "01110001000010000100001000010001110",
+    J: "00111000100001000010000101001001100", K: "10001100101010011000101001001010001", L: "10000100001000010000100001000011111",
+    M: "10001110111010110101100011000110001", N: "10001100011100110101100111000110001", O: "01110100011000110001100011000101110",
+    P: "11110100011000111110100001000010000", Q: "01110100011000110001101011001001101", R: "11110100011000111110101001001010001",
+    S: "01111100001000001110000010000111110", T: "11111001000010000100001000010000100", U: "10001100011000110001100011000101110",
+    V: "10001100011000110001100010101000100", W: "10001100011000110101101011010101010", X: "10001100010101000100010101000110001",
+    Y: "10001100010101000100001000010000100", Z: "11111000010001000100010001000011111", " ": "00000000000000000000000000000000000",
+    "·": "00000000000000000100000000000000000", "-": "00000000000000011111000000000000000",
+  };
+  const textCols = s => [...s].flatMap(ch => {
+    const g = F[ch] || F[" "], cols = [];
+    for (let c = 0; c < 5; c++) cols.push([...Array(7)].map((_, r) => g[r * 5 + c] === "1"));
+    cols.push(Array(7).fill(false));
+    return cols;
+  });
+
+  /* ===== título LED ===== */
+  (() => {
+    const cols = textCols("ZAIDSMART"); cols.pop();
+    const CW = cols.length + 2, RH = 9, off = [], on = [];
+    for (let x = 0; x < CW; x++) for (let y = 0; y < RH; y++) off.push(`<circle cx="${x + .5}" cy="${y + .5}" r=".36"/>`);
+    cols.forEach((col, x) => col.forEach((lit, y) => {
+      if (lit) on.push(`<circle class="on" style="animation-delay:${x * 28}ms" cx="${x + 1.5}" cy="${y + 1.5}" r=".42" fill="${mix(MENTA, VIOLETA, x / (cols.length - 1))}"/>`);
+    }));
+    document.getElementById("led-title").innerHTML =
+      `<svg class="led" viewBox="0 0 ${CW} ${RH}"><defs><filter id="glow" x="-20%" y="-50%" width="140%" height="200%"><feGaussianBlur stdDeviation=".35" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>` +
+      `<g fill="#141b34">${off.join("")}</g><g filter="url(#glow)">${on.join("")}</g></svg>`;
+  })();
+
+  /* ===== cartel que se desplaza ===== */
+  (() => {
+    const msg = "IDEAS INTELIGENTES · SOLUCIONES REALES · ";
+    const cols = textCols(msg), L = cols.length, CW = 137, RH = 9, off = [], on = [];
+    for (let x = 0; x < CW; x++) for (let y = 0; y < RH; y++) off.push(`<circle cx="${x + .5}" cy="${y + .5}" r=".34"/>`);
+    for (let rep = 0; rep < Math.ceil(CW / L) + 1; rep++)
+      cols.forEach((col, x) => col.forEach((lit, y) => { if (lit) on.push(`<circle cx="${rep * L + x + .5}" cy="${y + 1.5}" r=".4"/>`); }));
+    const start = reduce ? Math.round((L - CW) / 2) : 0;
+    document.getElementById("led-marquee").innerHTML =
+      `<svg class="led" viewBox="0 0 ${CW} ${RH}"><defs><clipPath id="win"><rect width="${CW}" height="${RH}"/></clipPath><filter id="glow2"><feGaussianBlur stdDeviation=".4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>` +
+      `<g fill="#1f1709">${off.join("")}</g><g clip-path="url(#win)"><g class="marq" fill="${SODIO}" filter="url(#glow2)" style="transform:translateX(${-start}px)">${on.join("")}</g></g></svg>`;
+    const st = document.createElement("style");
+    st.textContent = `.marq{animation:marq ${(L * 0.085).toFixed(2)}s steps(${L}) infinite}@keyframes marq{to{transform:translateX(-${L}px)}}` +
+      `.on{opacity:0;animation:poweron .5s steps(3) forwards}@keyframes poweron{0%{opacity:0}40%{opacity:1}60%{opacity:.3}100%{opacity:1}}` +
+      `@media (prefers-reduced-motion: reduce){.on{opacity:1}}`;
+    document.head.appendChild(st);
+  })();
+
+  /* ===== reloj del panel ===== */
+  const clock = document.getElementById("clock");
+  const tick = () => { const d = new Date(); clock.innerHTML = `${String(d.getHours()).padStart(2, "0")}<span class="colon">:</span>${String(d.getMinutes()).padStart(2, "0")}`; };
+  tick(); setInterval(tick, 10000);
+
+  /* ===== navegación sólida al bajar ===== */
+  const nav = document.getElementById("nav");
+  const onScroll = () => nav.classList.toggle("solid", scrollY > 40);
+  addEventListener("scroll", onScroll, { passive: true }); onScroll();
+  document.getElementById("year").textContent = new Date().getFullYear();
+
+  /* ===== mapa del móvil de ZaidMove ===== */
+  const m = document.getElementById("map");
+  if (m) {
+    const r = [`<rect width="300" height="620" fill="#0d1430"/>`];
+    r.push(`<path d="M-20 470 C 60 430, 120 520, 330 455" stroke="#0e2547" stroke-width="26" fill="none"/>`);
+    for (let x = -10; x < 310; x += 58) r.push(`<rect x="${x}" y="0" width="7" height="620" fill="#18224a"/>`);
+    for (let y = 20; y < 620; y += 64) r.push(`<rect x="0" y="${y}" width="300" height="7" fill="#18224a"/>`);
+    r.push(`<rect x="128" y="118" width="74" height="84" rx="6" fill="#0f2a2a"/>`);
+    [[142, 134], [168, 150], [188, 130], [150, 182], [184, 186]].forEach(([x, y]) => r.push(`<circle cx="${x}" cy="${y}" r="7" fill="#123a32"/>`));
+    r.push(`<rect x="0" y="230" width="300" height="12" fill="#23305e"/><rect x="106" y="0" width="12" height="620" fill="#23305e"/>`);
+    const route = "M 22 330 L 112 330 L 112 236 L 222 236 L 222 112";
+    r.push(`<path d="${route}" stroke="${MENTA}" stroke-opacity=".25" stroke-width="16" fill="none" stroke-linejoin="round"/>`);
+    r.push(`<path id="route" d="${route}" stroke="${MENTA}" stroke-width="6" fill="none" stroke-linejoin="round" stroke-linecap="round"/>`);
+    [[60, 330], [222, 180], [222, 112]].forEach(([x, y]) => r.push(`<circle cx="${x}" cy="${y}" r="7" fill="#0d1430" stroke="${MENTA}" stroke-width="3.5"/>`));
+    r.push(`<circle cx="112" cy="284" r="16" fill="${VIOLETA}" opacity=".25"><animate attributeName="r" values="10;20;10" dur="2s" repeatCount="indefinite"/></circle><circle cx="112" cy="284" r="7" fill="${VIOLETA}" stroke="#fff" stroke-width="2.5"/>`);
+    r.push(`<g><rect x="-15" y="-11" width="30" height="22" rx="7" fill="${VIOLETA}" stroke="#fff" stroke-width="2"/>` +
+      `<rect x="-8" y="-6" width="16" height="7" rx="1.5" fill="#d9e6ff"/><rect x="-8" y="3" width="16" height="2" fill="${MENTA}"/>` +
+      `<animateMotion dur="16s" repeatCount="indefinite" rotate="0"><mpath href="#route"/></animateMotion></g>`);
+    m.innerHTML = r.join("");
+    if (reduce) m.pauseAnimations();
+  }
+
+  /* ===== ciudad pixel de la portada ===== */
+  const hero = document.querySelector(".hero"), cv = document.getElementById("city"), ctx = cv.getContext("2d");
+  const rng = seed => { let s = seed; return () => (s = s * 16807 % 2147483647) / 2147483647; };
+  const mk = (w, h) => { const c = document.createElement("canvas"); c.width = w; c.height = h; return [c, c.getContext("2d")]; };
+  const P = (g, x, y, w, h, col) => { g.fillStyle = col; g.fillRect(x, y, w, h); };
+  let S, W, H, GROUND, T = {}, running = true, last = 0, time = 0;
+  const SP = 96;   // distancia entre farolas
+
+  const G3 = { Z: "111001010100111", A: "010101111101101", I: "111010010010111", D: "110101101101110", S: "011100010001110", M: "101111111101101", R: "110101110101101", T: "111010010010010" };
+
+  function busSprite(frame) {
+    const [c, g] = mk(48, 22);
+    P(g, 2, 1, 44, 1, "#8d5cff"); P(g, 0, 2, 48, 15, "#6a2fd6"); P(g, 1, 2, 46, 1, "#7d4cf5");
+    g.clearRect(0, 2, 1, 1); g.clearRect(47, 2, 1, 1);
+    for (let i = 0; i < 5; i++) {
+      const x = 3 + i * 7;
+      P(g, x, 4, 6, 5, "#0d1d3a"); P(g, x, 4, 6, 5, "rgba(122,240,200,.16)"); P(g, x, 4, 6, 1, "#21406e");
+      if (i === 1 || i === 3) { P(g, x + 2, 6, 2, 2, "#05070d"); P(g, x + 1, 8, 4, 1, "#05070d"); }
+    }
+    P(g, 39, 3, 8, 8, "#13284a"); [[41, 4], [42, 5], [43, 6]].forEach(([x, y]) => P(g, x, y, 1, 1, "#3d6aa8"));
+    P(g, 38, 4, 1, 11, "#4a1fae");
+    P(g, 2, 10, 36, 6, "#120a04");
+    [..."ZAIDSMART"].forEach((ch, i) => { const gl = G3[ch]; for (let k = 0; k < 15; k++) if (gl[k] === "1") P(g, 3 + i * 4 + k % 3, 10 + (k / 3 | 0), 1, 1, SODIO); });
+    P(g, 0, 16, 48, 1, MENTA); P(g, 0, 17, 48, 2, "#3b1a80");
+    const WH = frame ? [".KKKK.", "KGKKGK", "KKGGKK", "KKGGKK", "KGKKGK", ".KKKK."] : [".KKKK.", "KKGGKK", "KGKKGK", "KGKKGK", "KKGGKK", ".KKKK."];
+    [7, 35].forEach(wx => {
+      P(g, wx - 1, 15, 8, 4, "#1a0b33");
+      WH.forEach((row, y) => [...row].forEach((ch, x) => { if (ch !== ".") P(g, wx + x, 16 + y, 1, 1, ch === "K" ? "#05070d" : "#8a93b5"); }));
+    });
+    P(g, 47, 13, 1, 2, "#fff3a0"); P(g, 0, 12, 1, 3, "#ff3b4e");
+    return c;
+  }
+  /* silueta del bus con luz cálida (más fuerte arriba): se suma cuando pasa bajo una farola */
+  function busLight(sprite) {
+    const [c, g] = mk(48, 22);
+    g.drawImage(sprite, 0, 0);
+    g.globalCompositeOperation = "source-in";
+    for (let y = 0; y < 22; y++) P(g, 0, y, 48, 1, `rgba(255,196,120,${Math.max(0, .95 - y * .045).toFixed(3)})`);
+    return c;
+  }
+
+  function build() {
+    const b = hero.getBoundingClientRect();
+    S = Math.max(3, Math.round(Math.min(b.height / 175, b.width / 100)));
+    W = Math.ceil(b.width / S); H = Math.ceil(b.height / S);
+    cv.width = W; cv.height = H; cv.style.width = W * S + "px"; cv.style.height = H * S + "px";
+    GROUND = H - 20;
+    ctx.imageSmoothingEnabled = false;
+
+    /* cielo */
+    const [sky, gs] = mk(W, H);
+    const sc = ["#05070f", "#070a14", "#090d1b", "#0c1124", "#10142d", "#161637", "#1e1842", "#271b4c"];
+    for (let y = 0; y < H; y++) {
+      const t = Math.min(1, y / GROUND) * (sc.length - 1), i = t | 0, f = t - i, nxt = sc[Math.min(i + 1, sc.length - 1)];
+      P(gs, 0, y, W, 1, f > .8 ? nxt : sc[i]);
+      if (f > .45 && f <= .8) for (let x = (y % 2); x < W; x += 2) P(gs, x, y, 1, 1, nxt);
+    }
+    T.sky = sky;
+    const r0 = rng(11);
+    T.stars = Array.from({ length: Math.round(W * GROUND / 700) }, () => ({ x: r0() * W | 0, y: r0() * GROUND * .7 | 0, p: r0() * 6.28, s: .6 + r0() * 1.6, big: r0() < .1 }));
+
+    /* edificios lejanos */
+    const TF = Math.max(W, 260);
+    const [far, gf] = mk(TF, H); T.far = far; T.farW = TF; T.beacons = [];
+    { const r = rng(3); let x = 0;
+      while (x < TF - 8) {
+        const w = 8 + (r() * 14 | 0), h = 18 + (r() * Math.min(56, GROUND * .36) | 0), top = GROUND - h;
+        if (x + w > TF) break;
+        P(gf, x, top, w, GROUND - top + 4, "#0e1430");
+        for (let wy = top + 3; wy < GROUND - 2; wy += 4) for (let wx = x + 2; wx < x + w - 2; wx += 3) if (r() < .1) P(gf, wx, wy, 1, 1, "#26345f");
+        if (r() < .35) { P(gf, x + (w >> 1), top - 6, 1, 6, "#0e1430"); T.beacons.push({ x: x + (w >> 1), y: top - 7, p: r() * 6 }); }
+        x += w + (r() * 3 | 0);
+      } }
+
+    /* edificios cercanos */
+    const TM = Math.max(W, 300);
+    const [mid, gm] = mk(TM, H); T.mid = mid; T.midW = TM;
+    { const r = rng(7); let x = 0;
+      while (x < TM - 10) {
+        const w = 14 + (r() * 18 | 0), h = 14 + (r() * Math.min(40, GROUND * .24) | 0), top = GROUND - h;
+        if (x + w > TM) break;
+        P(gm, x, top, w, GROUND - top + 4, "#131b39"); P(gm, x, top, w, 1, "#1f2b55");
+        if (r() < .4) P(gm, x + 2, top - 2, w - 4, 2, "#131b39");
+        for (let wy = top + 3; wy < GROUND - 3; wy += 4) for (let wx = x + 2; wx < x + w - 2; wx += 3) {
+          const q = r(); P(gm, wx, wy, 2, 2, q < .08 ? "#e9b863" : q < .13 ? "#5fd2ad" : q < .17 ? "#9c7fe0" : "#0f1631");
+        }
+        x += w + 2 + (r() * 4 | 0);
+      } }
+
+    /* carretera, acera y farolas */
+    const TR = Math.ceil(Math.max(W, 200) / SP) * SP + SP;
+    const [road, gr] = mk(TR, H); T.road = road; T.roadW = TR; T.lamps = [];
+    { const r = rng(5);
+      P(gr, 0, GROUND, TR, 4, "#151e3c"); P(gr, 0, GROUND + 4, TR, 1, "#2a3966"); P(gr, 0, GROUND + 5, TR, H - GROUND - 5, "#0b1122");
+      for (let i = 0; i < TR * 2; i++) P(gr, r() * TR | 0, GROUND + 5 + (r() * (H - GROUND - 5) | 0), 1, 1, r() < .5 ? "#111a33" : "#080d1a");
+      for (let x = 0; x < TR; x += 12) P(gr, x, GROUND + 12, 6, 1, "#3a4a7a");
+      for (let x = 20; x < TR; x += SP) {
+        P(gr, x - 1, GROUND + 2, 4, 2, "#2b3558");
+        P(gr, x, GROUND - 40, 2, 43, "#2b3558"); P(gr, x + 1, GROUND - 38, 1, 40, "#3d4a78");
+        [[2, -41], [3, -42], [4, -42]].forEach(([dx, dy]) => P(gr, x + dx, GROUND + dy, 1, 1, "#3d4a78"));
+        P(gr, x + 5, GROUND - 43, 6, 1, "#3d4a78"); P(gr, x + 8, GROUND - 43, 7, 2, "#2b3558"); P(gr, x + 9, GROUND - 41, 5, 1, "#fff6d8");
+        T.lamps.push(x + 11.5);
+      } }
+
+    /* luz de las farolas: halo, cono muy suave y charco en el suelo */
+    const [lights, gl] = mk(TR, H); T.lights = lights;
+    for (const cx of T.lamps) {
+      const y0 = GROUND - 40, y1 = GROUND + 16;
+      for (let y = y0; y <= y1; y++) {
+        const t = (y - y0) / (y1 - y0), hw = 1.5 + t * 12, a = .03 * Math.pow(1 - t, 1.6) + .005;
+        [1, .6, .3].forEach(k => P(gl, Math.round(cx - hw * k), y, Math.max(1, Math.round(hw * k * 2)), 1, `rgba(255,176,82,${a.toFixed(3)})`));
+      }
+      [[GROUND + 1, 9], [GROUND + 3, 12], [GROUND + 6, 15], [GROUND + 8, 18], [GROUND + 10, 19], [GROUND + 12, 19], [GROUND + 14, 16]].forEach(([y, hw]) =>
+        [1, .6, .3].forEach(k => P(gl, Math.round(cx - hw * k), y, Math.round(hw * k * 2), 2, "rgba(255,165,70,.075)")));
+      P(gl, Math.round(cx) - 6, GROUND - 44, 12, 5, "rgba(255,220,150,.16)");
+      P(gl, Math.round(cx) - 4, GROUND - 42, 8, 3, "rgba(255,230,170,.22)");
+    }
+
+    /* bus y sus luces */
+    T.bus = [busSprite(0), busSprite(1)];
+    T.busLight = T.bus.map(busLight);
+    T.bx = Math.max(4, Math.round(W * .36 - 24)); T.by = GROUND - 7;
+    const [beam, gb] = mk(W + 120, H); T.beam = beam;
+    { const hx = T.bx + 48, hy = T.by + 13;
+      for (let i = 1; i < 64; i++) {
+        const t = i / 64, top = hy - .5 + t * 2, bot = Math.min(H - 1, hy + 1.5 + t * 7), a = .11 * Math.pow(1 - t, 1.6);
+        P(gb, hx + i, Math.round(top), 1, Math.max(1, Math.round(bot - top)), `rgba(255,236,190,${a.toFixed(3)})`);
+      }
+      [[GROUND + 11, 18, .06], [GROUND + 12, 24, .08], [GROUND + 13, 28, .1], [GROUND + 14, 28, .09], [GROUND + 15, 22, .06]].forEach(([y, hw, a]) =>
+        [1, .55].forEach(k => P(gb, Math.round(hx + 32 - hw * k), y, Math.round(hw * k * 2), 1, `rgba(255,232,180,${a})`)));
+      for (let i = 1; i < 16; i++) P(gb, T.bx - i, T.by + 13, 1, 1, `rgba(255,59,78,${(.4 - i * .024).toFixed(3)})`);
+      P(gb, T.bx - 4, GROUND + 14, 10, 1, "rgba(255,59,78,.12)");
+    }
+  }
+
+  const off = (t, speed, tile) => -((t * speed) % tile) | 0;
+  function frame(t) {
+    ctx.globalCompositeOperation = "source-over";
+    ctx.drawImage(T.sky, 0, 0);
+    for (const s of T.stars) {
+      ctx.globalAlpha = .35 + .65 * (.5 + .5 * Math.sin(t * s.s + s.p));
+      P(ctx, s.x, s.y, 1, 1, "#e8fff6");
+      if (s.big) { P(ctx, s.x - 1, s.y, 3, 1, "#e8fff6"); P(ctx, s.x, s.y - 1, 1, 3, "#e8fff6"); }
+    }
+    ctx.globalAlpha = 1;
+    const of = off(t, 3, T.farW), om = off(t, 10, T.midW), orr = off(t, 46, T.roadW);
+    ctx.drawImage(T.far, of, 0); ctx.drawImage(T.far, of + T.farW, 0);
+    for (const b of T.beacons) for (const k of [0, 1]) {
+      const x = of + k * T.farW + b.x;
+      if (x >= 0 && x < W && Math.sin(t * 2 + b.p) > .2) P(ctx, x, b.y, 1, 1, "#ff4d6d");
+    }
+    ctx.drawImage(T.mid, om, 0); ctx.drawImage(T.mid, om + T.midW, 0);
+    ctx.drawImage(T.road, orr, 0); ctx.drawImage(T.road, orr + T.roadW, 0);
+    const bob = (Math.floor(t * 2.6) % 3 === 0) ? -1 : 0, wf = Math.floor(t * 9) % 2;
+    ctx.drawImage(T.bus[wf], T.bx, T.by + bob);
+    ctx.globalCompositeOperation = "lighter";
+    ctx.drawImage(T.lights, orr, 0); ctx.drawImage(T.lights, orr + T.roadW, 0);
+    /* el bus se ilumina al pasar bajo una farola */
+    let near = 0;
+    const bc = T.bx + 24;
+    for (const k of [0, 1]) for (const lx of T.lamps) near = Math.max(near, 1 - Math.abs(orr + k * T.roadW + lx - bc) / 34);
+    if (near > 0) { ctx.globalAlpha = near * near * .4; ctx.drawImage(T.busLight[wf], T.bx, T.by + bob); ctx.globalAlpha = 1; }
+    ctx.drawImage(T.beam, 0, bob);
+    ctx.globalCompositeOperation = "source-over";
+  }
+
+  function loop(now) {
+    if (!running) return;
+    const dt = Math.min(.05, (now - last) / 1000 || 0); last = now; time += dt;
+    frame(time);
+    requestAnimationFrame(loop);
+  }
+  build();
+  if (reduce) { frame(5.3); }
+  else {
+    requestAnimationFrame(n => { last = n; loop(n); });
+    new IntersectionObserver(([e]) => {
+      const was = running; running = e.isIntersecting;
+      if (running && !was) requestAnimationFrame(n => { last = n; loop(n); });
+    }).observe(hero);
+  }
+  let rz; addEventListener("resize", () => { clearTimeout(rz); rz = setTimeout(() => { build(); frame(time); }, 150); });
+})();
+</script>
+</body>
+</html>
